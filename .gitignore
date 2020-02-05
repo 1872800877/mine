@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -54,4 +53,3 @@ build/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
->>>>>>> e04288966ee83c7ac19e51c5a09e4ea111d732b8
