@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <!-- bootstrap基础样式 -->
+    <link rel="stylesheet" href="/mine/common/bootstrap/css/bootstrap.min.css">
+    <!--    bootstrap-->
+<!--    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap-grid.min.css">-->
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="/mine/css/common.css">
+    <!-- 页面样式 -->
+    <link rel="stylesheet" href="/mine/css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="head">
+            <div class="left">
+                <ul class="breadcrumb">
+                    <li>主页</li>
+                    <li>{{nowYear}}</li>
+                    <li class="active">{{nowMouth}}</li>
+                    <li>{{nowDay}}</li>
+                </ul>
+            </div>
+            <div class="right">
+                <div class="login"><a href="#" @click="showLogin" v-show="isShowLogin">请登录</a>
+                    <div class="dropdown" v-show="!isShowLogin">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{getNickName()}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="/mine/login/exit" >退出</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="banner total-background">
+            <div class="totalBanner total-background-img"></div>
+            <div class="login-panel" v-show="isLogin">
+                <ul class="nav nav-pills nav-justified">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="login-tab" data-toggle="tab" aria-controls="login" aria-selected="true" href="#login">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="register-tab" data-toggle="tab" aria-controls="register" aria-selected="true" href="#register">注册</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active login-panel-common" id="login" role="tabpanel" aria-labelledby="login-tab">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="basic-addon1">用户名：</span>
+                            </div>
+                            <input type="text" v-model="username" name="username" class="form-control" placeholder="请输入用户名" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="basic-addon2">密码：</span>
+                            </div>
+                            <input type="password" v-model="password" class="form-control" name="password" placeholder="请输入密码" aria-label="Username" aria-describedby="basic-addon2">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="basic-addon3"><img class="verify-code" src="/mine/login/getVerifyCode"/></span>
+                            </div>
+                            <input type="text" v-model="verifyCode" name="verifyCode" class="form-control" placeholder="验证码" aria-label="Recipient's username" aria-describedby="basic-addon3">
+                            <div class="input-group-append">
+                                <button class="btn" type="button" @click="getVerifyCode">看不清？</button>
+                            </div>
+                        </div>
+                        <div class="login-tip right"></div>
+                        <button type="button" class="btn btn-secondary btn-block" @click="toLogin">登录</button>
+                    </div>
+                    <div class="tab-pane fade login-panel-common" id="register" role="tabpanel" aria-labelledby="register-tab">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="register-addon1">用户名：</span>
+                            </div>
+                            <input type="text" v-model="username" name="username" class="form-control" placeholder="请输入用户名" aria-label="Username" aria-describedby="register-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="register-addon2">昵称：</span>
+                            </div>
+                            <input type="text" v-model="nickName" class="form-control" name="nickName" placeholder="请输入昵称" aria-label="nickName" aria-describedby="register-addon2">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="register-addon3">密码：</span>
+                            </div>
+                            <input type="password" v-model="password" class="form-control" name="password" placeholder="请输入密码" aria-label="password" aria-describedby="register-addon3">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend col-4">
+                                <span class="input-group-text col-12 text-justify" id="register-addon4">密码：</span>
+                            </div>
+                            <input type="password" v-model="confirmPassword" class="form-control" name="confirmPassword" placeholder="请输入密码" aria-label="confirmPassword" aria-describedby="register-addon4">
+                        </div>
+                        <div class="register-tip right"></div>
+                        <button type="button" class="btn btn-secondary btn-block" @click="toRegister">注册</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content" >
+            <div>
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        添加文章
+                    </button>
+                </p>
+                <div class="collapse margin-bottom-75" id="collapseExample">
+                    <div class="card card-body">
+                        <label for="article-title">请选择文章类型并输入文章标题</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <input type="hidden" name="articleTypeid" v-model="theArticle.articleType.id"/>
+                                <button type="button" class="btn btn-outline-secondary">{{theArticle.articleType.articletypeName}}</button>
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" v-for="articleType in articleTypes" @click="theArticle.articleType=articleType">{{articleType.articletypeName}}</a>
+                                </div>
+                            </div>
+                            <input id="article-title" v-model="theArticle.articleTitle" name="articleTitle" type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+                        </div>
+                       <textarea class="margin-bottom-75 mineEditor" name="articleContent" id="editor" v-model="theArticle.articleContent">
+                        </textarea>
+                        <p>
+                            <button class="btn btn-primary margin-top-75" type="button" @click="submitArticle($event)">
+                                提交
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="jumbotron position-relative article" v-for="item in hotArticles">
+                <h1 class="display-4">{{item.articleTitle}} </h1>
+                <div class="dropdown article-option">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="article-option-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        操作
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="article-option-dropdown">
+                        <a class="dropdown-item" href="javascript:void(0);" @click="alterArticle(item.id,$event)">修改</a>
+                        <a class="dropdown-item" href="javascript:void(0);" @click="deleteArticle(item.id,$event)">删除</a>
+                    </div>
+                </div>
+                <p class="lead">发布日期：{{getDateFromTimestamp(item.articleDate)}} 浏览次数：{{item.articleCount}}</p>
+                <hr class="my-4">
+                <p class="article-content" v-html="item.articleContent"></p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+                </p>
+            </div>
+        </div>
+        <div class="foot">
+            <form action="/mine/common/img2String" enctype="multipart/form-data" method="POST" target="_self">
+            上传文件：<input type="file" name="file"><br/>
+            <input type="submit" value="提交">
+            </form>
+
+        </div>
+        <div class="background">
+        </div>
+        <div class="collapse" id="alterArticle">
+            <div class="card card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <input type="hidden" name="articleTypeid" v-model="theArticle.articleType.id"/>
+                        <button type="button" class="btn btn-outline-secondary">{{theArticle.articleType.articletypeName}}</button>
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" v-for="articleType in articleTypes" @click="theArticle.articleType=articleType">{{articleType.articletypeName}}</a>
+                        </div>
+                    </div>
+                    <input v-model="theArticle.articleTitle" name="articleTitle" type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+                </div>
+                <textarea class="margin-bottom-75 mineEditor" name="articleContent" id="alertEditor">
+                        </textarea>
+                <p>
+                    <button class="btn btn-primary margin-top-75" type="button" @click="submitAlterArticle($event)">
+                        提交
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script th:inline="javascript">
+    var bgs= [[${bgImgs}]];
+    var user = [[${session.user}]];
+</script>
+<script th:inline="javascript" data-main="/mine/js/index" src="/mine/common/require.js"></script>
+</html>

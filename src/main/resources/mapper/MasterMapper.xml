@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.MasterMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.Master">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Master_username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Master_nickName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Master_password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Master_oicq" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Master_sex" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Master_logintime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, Master_username, Master_nickName, Master_password, Master_oicq, Master_sex, Master_logintime
+  </sql>
+  <select id="selectByExample" parameterType="com.example.demo.entity.MasterExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from tb_master
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_master
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_master
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.entity.Master">
+    insert into tb_master (id, Master_username, Master_nickName, 
+      Master_password, Master_oicq, Master_sex, 
+      Master_logintime)
+    values (#{id,jdbcType=INTEGER}, #{masterUsername,jdbcType=VARCHAR}, #{masterNickname,jdbcType=VARCHAR}, 
+      #{masterPassword,jdbcType=VARCHAR}, #{masterOicq,jdbcType=VARCHAR}, #{masterSex,jdbcType=INTEGER}, 
+      #{masterLogintime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.entity.Master">
+    insert into tb_master
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="masterUsername != null">
+        Master_username,
+      </if>
+      <if test="masterNickname != null">
+        Master_nickName,
+      </if>
+      <if test="masterPassword != null">
+        Master_password,
+      </if>
+      <if test="masterOicq != null">
+        Master_oicq,
+      </if>
+      <if test="masterSex != null">
+        Master_sex,
+      </if>
+      <if test="masterLogintime != null">
+        Master_logintime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="masterUsername != null">
+        #{masterUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="masterNickname != null">
+        #{masterNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="masterPassword != null">
+        #{masterPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="masterOicq != null">
+        #{masterOicq,jdbcType=VARCHAR},
+      </if>
+      <if test="masterSex != null">
+        #{masterSex,jdbcType=INTEGER},
+      </if>
+      <if test="masterLogintime != null">
+        #{masterLogintime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.demo.entity.MasterExample" resultType="java.lang.Long">
+    select count(*) from tb_master
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.Master">
+    update tb_master
+    <set>
+      <if test="masterUsername != null">
+        Master_username = #{masterUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="masterNickname != null">
+        Master_nickName = #{masterNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="masterPassword != null">
+        Master_password = #{masterPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="masterOicq != null">
+        Master_oicq = #{masterOicq,jdbcType=VARCHAR},
+      </if>
+      <if test="masterSex != null">
+        Master_sex = #{masterSex,jdbcType=INTEGER},
+      </if>
+      <if test="masterLogintime != null">
+        Master_logintime = #{masterLogintime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.Master">
+    update tb_master
+    set Master_username = #{masterUsername,jdbcType=VARCHAR},
+      Master_nickName = #{masterNickname,jdbcType=VARCHAR},
+      Master_password = #{masterPassword,jdbcType=VARCHAR},
+      Master_oicq = #{masterOicq,jdbcType=VARCHAR},
+      Master_sex = #{masterSex,jdbcType=INTEGER},
+      Master_logintime = #{masterLogintime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
